@@ -28,12 +28,23 @@ public class CarnetService {
 		return carnetRepository.save(carnet);
 	}
 	
-	public Carnet updaCarnet(Carnet carnet) {
-		return carnetRepository.save(carnet);
+	public Carnet updaCarnet(Long id, Carnet carnet) {
+		return carnetRepository.findById(id)
+		.map(c -> {
+			c.setTitle(carnet.getTitle());
+			c.setIntroduction(carnet.getIntroduction());
+			c.setDescription(carnet.getDescription());
+			c.setPicture1(carnet.getPicture1());
+			c.setPicture2(carnet.getPicture2());
+			c.setPicture3(carnet.getPicture3());
+			c.setCountry(carnet.getCountry());
+			return carnetRepository.save(c);
+		}).orElseThrow(()-> new RuntimeException("Carnet non trouvé !"));
 	}
 	
-	public void deleteById(Long id) {
+	public String deleteById(Long id) {
 		carnetRepository.deleteById(id);
+		return "Carnet supprimé";
 	}
 
 }
