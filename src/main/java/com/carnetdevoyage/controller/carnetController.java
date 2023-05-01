@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +47,13 @@ public class carnetController {
 		List<Carnet> carnets = new ArrayList<>(carnetService.findAll());
 	    int startIndex = Math.max(0, carnets.size() - 4);
 	    return carnets.subList(startIndex, carnets.size());
+	}
+	
+	@GetMapping("/randomCarnet")
+	public Carnet getRandomCarnet() {
+	    Collection<Carnet> carnets = carnetService.findAll();
+	    int randomIndex = new Random().nextInt(carnets.size());
+	    return carnets.stream().skip(randomIndex).findFirst().get();
 	}
 	
 	@PutMapping("/update/{id}")
