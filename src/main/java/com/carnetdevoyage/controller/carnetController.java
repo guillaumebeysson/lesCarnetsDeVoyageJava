@@ -2,6 +2,7 @@ package com.carnetdevoyage.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -37,6 +38,11 @@ public class carnetController {
 		return carnetService.findAll();
 	}
 	
+	@GetMapping("/reverseOrder")
+	public Collection<Carnet> findAllReverseOrder(){
+		return carnetService.findAllReverseOrder();
+	}
+	
 	@GetMapping("/{id}")
 	public Optional<Carnet> readById(@PathVariable Long id){
 		return carnetService.findById(id);
@@ -45,8 +51,9 @@ public class carnetController {
 	@GetMapping("/lastFour")
 	public Collection<Carnet> readLastFour(){
 		List<Carnet> carnets = new ArrayList<>(carnetService.findAll());
-	    int startIndex = Math.max(0, carnets.size() - 4);
-	    return carnets.subList(startIndex, carnets.size());
+		Collections.reverse(carnets);
+		int endIndex = Math.min(carnets.size(), 4);
+	    return carnets.subList(0, endIndex);
 	}
 	
 	@GetMapping("/randomCarnet")
@@ -54,6 +61,11 @@ public class carnetController {
 	    Collection<Carnet> carnets = carnetService.findAll();
 	    int randomIndex = new Random().nextInt(carnets.size());
 	    return carnets.stream().skip(randomIndex).findFirst().get();
+	}
+	
+	@GetMapping("country/{country}")
+	public Collection<Carnet> readByCountry(@PathVariable String country){
+		return carnetService.findByCountry(country);
 	}
 	
 	@PutMapping("/update/{id}")

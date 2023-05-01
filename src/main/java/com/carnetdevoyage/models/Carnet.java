@@ -1,14 +1,19 @@
 package com.carnetdevoyage.models;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -48,6 +53,24 @@ public class Carnet {
 	
 	@NotBlank
 	private String country;
+	
+	
+	private int durationTrip;
+	
+	private String DeparturePeriod;
+	
+	private String organisation;
+	
+	private String situation;
+	
+	private String transport;
+	
+    private LocalDate date;
+
+    @PrePersist
+    public void prePersist() {
+        this.date = LocalDate.now();
+    }
 	
 	@OneToMany(mappedBy="id.carnet")
 	private Set<CarnetItem> carnetItems;
