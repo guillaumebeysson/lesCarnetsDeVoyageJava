@@ -54,9 +54,9 @@ public class CarnetService {
 		}).orElseThrow(()-> new RuntimeException("Carnet non trouvé !"));
 	}
 	
-	public String deleteById(Long id) {
-		carnetRepository.deleteById(id);
-		return "Carnet supprimé";
+	public void deleteById(Long id) {
+		System.out.println("ID du carnet à supprimer : " + id);
+	    carnetRepository.deleteById(id);
 	}
 
 }
