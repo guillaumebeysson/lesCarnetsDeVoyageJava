@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,17 +34,15 @@ public class User {
 	@GeneratedValue
 	private long id;
 	
-	
 	@Email
 	private String email;
 	
 	@NotBlank
-	private String name;
-	
+	private String username;
 	
 	@NotBlank
 	@Length(min = 8)
-	private String password;
+	String password;
 	
 	private UserRole role;
 
