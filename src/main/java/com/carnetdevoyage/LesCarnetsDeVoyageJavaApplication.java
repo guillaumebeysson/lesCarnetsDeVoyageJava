@@ -11,6 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.carnetdevoyage.config.RsaKeyProperties;
 
+import lombok.AllArgsConstructor;
+
 @SpringBootApplication
 @EnableConfigurationProperties(RsaKeyProperties.class)
 public class LesCarnetsDeVoyageJavaApplication{

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,7 @@ public class carnetController {
 		return carnetService.save(carnet);
 	}
 	
+/*	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")*/
 	@GetMapping("")
 	public Collection<Carnet> read(){
 		return carnetService.findAll();
@@ -48,6 +51,7 @@ public class carnetController {
 	public Optional<Carnet> readById(@PathVariable Long id){
 		return carnetService.findById(id);
 	}
+	
 	
 	@GetMapping("/lastFour")
 	public Collection<Carnet> readLastFour(){

@@ -30,11 +30,11 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-@Secured("SCOPE_ADMIN")
+/*@Secured("SCOPE_ADMIN")*/
 public class UserController {
 
     private UserService userService;
-    /*private UserRepository userRepository;
+    private UserRepository userRepository;
     private PasswordEncoder encoder;
 
     @PostMapping("auth")
@@ -50,7 +50,7 @@ public class UserController {
         }
         result.setPassword(user.getPassword());
         return new ResponseEntity<User>(result, HttpStatus.OK);
-    }*/
+    }
 
 
     @GetMapping()
