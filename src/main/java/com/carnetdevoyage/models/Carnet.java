@@ -62,11 +62,6 @@ public class Carnet {
 	private String transport;
 	
     private LocalDate date;
-
-    @PrePersist
-    public void prePersist() {
-        this.date = LocalDate.now();
-    }
 	
 	@OneToMany(mappedBy="id.carnet")
 	private Set<CarnetItem> carnetItems;
