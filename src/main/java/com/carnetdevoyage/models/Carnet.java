@@ -53,13 +53,15 @@ public class Carnet {
 	
 	private int durationTrip;
 	
-	private String DeparturePeriod;
+	private String departurePeriod;
 	
 	private String organisation;
 	
 	private String situation;
 	
 	private String transport;
+	
+	private String city;
 	
     private LocalDate date;
 	

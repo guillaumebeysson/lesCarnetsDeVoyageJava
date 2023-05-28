@@ -2,9 +2,11 @@ package com.carnetdevoyage.models;
 
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -14,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -33,6 +36,10 @@ import lombok.experimental.SuperBuilder;
 		@JsonSubTypes.Type(value = Client.class, name = "CLIENT")
 })
 public class User {
+	
+	@OneToMany(mappedBy="id.user", cascade=CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	private Set<CarnetItem> carnetItems;
 	
 	@EqualsAndHashCode.Include
 	@Id

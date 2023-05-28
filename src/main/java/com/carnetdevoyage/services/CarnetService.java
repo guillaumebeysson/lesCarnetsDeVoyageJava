@@ -48,6 +48,7 @@ public class CarnetService {
 			c.setPicture2(carnet.getPicture2());
 			c.setPicture3(carnet.getPicture3());
 			c.setCountry(carnet.getCountry());
+			c.setCity(carnet.getCity());
 			return carnetRepository.save(c);
 		}).orElseThrow(()-> new RuntimeException("Carnet non trouvé !"));
 	}

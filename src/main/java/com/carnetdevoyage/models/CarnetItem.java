@@ -23,7 +23,7 @@ public class CarnetItem {
 	@NoArgsConstructor
 	public static class CarnetItemId{
 		@ManyToOne
-		private Client client;
+		private User user;
 		@ManyToOne
 		private Carnet carnet;
 	}

@@ -8,5 +8,9 @@ import com.carnetdevoyage.models.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 	
 	public User findByUsername(String name);
+	
+	boolean existsByUsername(String username);
+	
+	boolean existsByEmail(String email);
 
 }

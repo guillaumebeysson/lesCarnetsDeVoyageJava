@@ -23,8 +23,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Client extends User{
 	
-	@OneToMany(mappedBy="id.client", cascade=CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	private Set<CarnetItem> carnetItems;
+	private String test;
 
 }

@@ -65,11 +65,11 @@ public class UserService {
 	
 	@Transactional
 	public Collection<CarnetItem> updateCarnet(CarnetItem carnetItem){
-		Client c = carnetItem.getId().getClient();
-		c.setCarnetItems(c.getCarnetItems().stream()
+		User u = carnetItem.getId().getUser();
+		u.setCarnetItems(u.getCarnetItems().stream()
 				.map(ci -> (ci.equals(carnetItem)) ? carnetItem : ci)
 				.collect(Collectors.toSet()));
-		return c.getCarnetItems();
+		return u.getCarnetItems();
 	}
 	
 	@Transactional
@@ -80,6 +80,14 @@ public class UserService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les admins n'ont pas de carnet");
 		((Client) u).getCarnetItems().add(CarnetItem.builder().id(new CarnetItemId((Client) u, carnet)).build());
 		return ((Client) u).getCarnetItems();
+	}
+	
+	public boolean isUsernameDuplicate(String username) {
+		  return userRepository.existsByUsername(username);
+	}
+	
+	public boolean isEmailDuplicate(String email) {
+		  return userRepository.existsByEmail(email);
 	}
 
 }

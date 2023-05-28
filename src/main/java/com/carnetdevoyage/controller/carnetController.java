@@ -94,19 +94,26 @@ public class carnetController {
 	
 	@GetMapping("/search")
     public List<Carnet> rechercherCarnets(
+    		//aucun paramètre de requête n'est obligatoire
             @RequestParam(required = false) String country,
             @RequestParam(required = false) Integer durationTrip,
             @RequestParam(required = false) String organisation,
             @RequestParam(required = false) String situation,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String transport,
-            @RequestParam(required = false) String departurePeriod
+            @RequestParam(required = false) String departurePeriod,
+            @RequestParam(required = false) String city
     ) {
+		// Obtention du CriteriaBuilder pour créer des critères de requête
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        // Création d'une requête de type Carnet
         CriteriaQuery<Carnet> query = cb.createQuery(Carnet.class);
+        // Définition de la racine de la requête (table cible)
         Root<Carnet> root = query.from(Carnet.class);
+        // Liste des prédicats pour filtrer les résultats
         List<Predicate> predicates = new ArrayList<>();
 
+        // Vérification des paramètres de recherche et ajout des prédicats correspondants
         if (country != null) {
             predicates.add(cb.equal(root.get("country"), country));
         }
@@ -120,7 +127,8 @@ public class carnetController {
             predicates.add(cb.equal(root.get("situation"), situation));
         }
         if (title != null) {
-            predicates.add(cb.equal(root.get("title"), title));
+        	// Ajout d'un prédicat 'like' pour rechercher le titre contenant le texte spécifié
+        	predicates.add(cb.like(root.get("title"), "%" + title + "%"));
         }
         if (transport != null) {
             predicates.add(cb.equal(root.get("transport"), transport));
@@ -128,10 +136,17 @@ public class carnetController {
         if (departurePeriod != null) {
             predicates.add(cb.equal(root.get("departurePeriod"), departurePeriod));
         }
+        if (city != null) {
+            predicates.add(cb.equal(root.get("city"), city));
+        }
 
+        // Ajout des prédicats à la clause WHERE de la requête
         query.where(predicates.toArray(new Predicate[0]));
 
+        // Création d'une requête typée à partir de la requête CriteriaQuery
         TypedQuery<Carnet> typedQuery = entityManager.createQuery(query);
+        
+        // Exécution de la requête et récupération des résultats
         return typedQuery.getResultList();
     }
 }

@@ -1,7 +1,9 @@
 package com.carnetdevoyage.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,18 @@ public class UserController {
         }
         result.setPassword(user.getPassword());
         return new ResponseEntity<User>(result, HttpStatus.OK);
+    }
+    
+    @PostMapping("/check-duplicate")
+    public ResponseEntity<Map<String, Boolean>> checkDuplicate(@RequestBody Map<String, String> user) {
+      String username = user.get("username");
+      String email = user.get("email");
+
+      Map<String, Boolean> duplicateMap = new HashMap<>();
+      duplicateMap.put("username", userService.isUsernameDuplicate(username));
+      duplicateMap.put("email", userService.isEmailDuplicate(email));
+
+      return ResponseEntity.ok(duplicateMap);
     }
 
 
