@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +15,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.carnetdevoyage.models.Carnet;
+import com.carnetdevoyage.repositories.CarnetRepository;
 import com.carnetdevoyage.services.CarnetService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -30,6 +36,8 @@ import lombok.AllArgsConstructor;
 public class carnetController {
 
 	private final CarnetService carnetService;
+	private CarnetRepository carnetRepository;
+	private EntityManager entityManager;
 	
 	@PostMapping("/createCarnet")
 	public Carnet create(@RequestBody Carnet carnet) {
@@ -83,4 +91,47 @@ public class carnetController {
 	    carnetService.deleteById(id);
 	    return ResponseEntity.noContent().build();
 	}
+	
+	@GetMapping("/search")
+    public List<Carnet> rechercherCarnets(
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) Integer durationTrip,
+            @RequestParam(required = false) String organisation,
+            @RequestParam(required = false) String situation,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String transport,
+            @RequestParam(required = false) String departurePeriod
+    ) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Carnet> query = cb.createQuery(Carnet.class);
+        Root<Carnet> root = query.from(Carnet.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (country != null) {
+            predicates.add(cb.equal(root.get("country"), country));
+        }
+        if (durationTrip != null) {
+            predicates.add(cb.equal(root.get("durationTrip"), durationTrip));
+        }
+        if (organisation != null) {
+            predicates.add(cb.equal(root.get("organisation"), organisation));
+        }
+        if (situation != null) {
+            predicates.add(cb.equal(root.get("situation"), situation));
+        }
+        if (title != null) {
+            predicates.add(cb.equal(root.get("title"), title));
+        }
+        if (transport != null) {
+            predicates.add(cb.equal(root.get("transport"), transport));
+        }
+        if (departurePeriod != null) {
+            predicates.add(cb.equal(root.get("departurePeriod"), departurePeriod));
+        }
+
+        query.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Carnet> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
+    }
 }

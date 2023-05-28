@@ -27,7 +27,7 @@ public class JwtService {
     public Map<String, String> generateToken(String username, String roles){
         JwtClaimsSet jwtClaims = JwtClaimsSet.builder()
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
+                .expiresAt(Instant.now().plus(50, ChronoUnit.MINUTES))
                 .issuer("spring-security-oauth")
                 .subject(username)
                 .claim("scope", roles)
