@@ -1,5 +1,8 @@
 package com.carnetdevoyage.services;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.carnetdevoyage.models.Carnet;
 import com.carnetdevoyage.repositories.CarnetRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -30,8 +34,25 @@ public class CarnetService {
 	    return carnetRepository.findAll(sort);
 	}
 	
+//	public Carnet save(Carnet carnet) {
+//		return carnetRepository.save(carnet);
+//	}
+	
+	
 	public Carnet save(Carnet carnet) {
-		return carnetRepository.save(carnet);
+//		try {
+			
+		return	carnetRepository.save(carnet);
+//		} catch (Throwable e) {
+//			try {
+//				if (c.getPicture1().equals(PostType.IMAGE))
+//					Files.deleteIfExists(Paths.get("C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + ((ImagePost) c).getFile()));
+//			} catch (Exception e1) {
+//				e.addSuppressed(e1);
+//				throw e;
+//			}
+//			throw e;
+//		}
 	}
 	
 	public Collection<Carnet> findByCountry(String country) {

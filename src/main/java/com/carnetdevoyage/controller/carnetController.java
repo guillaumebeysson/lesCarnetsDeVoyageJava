@@ -1,5 +1,9 @@
 package com.carnetdevoyage.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +22,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.carnetdevoyage.models.Carnet;
 import com.carnetdevoyage.repositories.CarnetRepository;
@@ -28,6 +36,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -39,9 +48,37 @@ public class carnetController {
 	private CarnetRepository carnetRepository;
 	private EntityManager entityManager;
 	
-	@PostMapping("/createCarnet")
-	public Carnet create(@RequestBody Carnet carnet) {
-		return carnetService.save(carnet);
+//	@PostMapping("/createCarnet")
+//	public Carnet create(@RequestBody Carnet carnet) {
+//		return carnetService.save(carnet);
+//	}
+	
+	
+	@PostMapping(value = "/createCarnet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void save(
+	        @Valid @RequestBody Carnet carnet,
+	        @RequestPart(required = false) MultipartFile picture1,
+	        @RequestPart(required = false) MultipartFile picture2,
+	        @RequestPart(required = false) MultipartFile picture3,
+	        Authentication auth) throws IOException {
+	    if (picture1 != null && !picture1.isEmpty()) {
+	        carnet.setPicture1(savePicture(picture1));
+	    }
+	    if (picture2 != null && !picture2.isEmpty()) {
+	        carnet.setPicture2(savePicture(picture2));
+	    }
+	    if (picture3 != null && !picture3.isEmpty()) {
+	        carnet.setPicture3(savePicture(picture3));
+	    }
+	    // carnet.setAuthor(((MyUserDetails) auth.getPrincipal()).getUser());
+	    carnetService.save(carnet);
+	}
+
+	private String savePicture(MultipartFile picture) throws IOException {
+	    String fileName = picture.getOriginalFilename();
+	    String filePath = "C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + fileName;
+	    Files.copy(picture.getInputStream(), Paths.get(filePath));
+	    return filePath;
 	}
 	
 /*	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")*/

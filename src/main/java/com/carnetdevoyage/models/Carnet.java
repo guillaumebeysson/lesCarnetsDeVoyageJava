@@ -1,6 +1,7 @@
 package com.carnetdevoyage.models;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -38,13 +39,13 @@ public class Carnet {
 	@Column(length = 600)
 	private String description;
 	
-	@NotBlank
+	
 	private String picture1;
 	
-	@NotBlank
+	
 	private String picture2;
 	
-	@NotBlank
+	
 	private String picture3;
 	
 	@NotBlank
