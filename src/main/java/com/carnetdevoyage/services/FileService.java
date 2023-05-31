@@ -17,7 +17,8 @@ public class FileService {
 		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 		Path p;
 		do {
-			p = Paths.get("C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + UUID.randomUUID() + extension);
+			 p = Paths.get("C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + UUID.randomUUID() + extension);
+			// p = Paths.get(UUID.randomUUID() + extension);
 		} while (Files.exists(p));
 		Files.copy(data, p);
 		return p.getFileName();

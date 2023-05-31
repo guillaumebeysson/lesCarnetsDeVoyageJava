@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -47,6 +51,7 @@ public class carnetController {
 	private final CarnetService carnetService;
 	private CarnetRepository carnetRepository;
 	private EntityManager entityManager;
+	private Environment environment;
 	
 //	@PostMapping("/createCarnet")
 //	public Carnet create(@RequestBody Carnet carnet) {
@@ -56,10 +61,10 @@ public class carnetController {
 	
 	@PostMapping(value = "/createCarnet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void save(
-	        @Valid @RequestBody Carnet carnet,
-	        @RequestPart(required = false) MultipartFile picture1,
-	        @RequestPart(required = false) MultipartFile picture2,
-	        @RequestPart(required = false) MultipartFile picture3,
+	        @Valid @RequestPart Carnet carnet,
+	        @RequestPart(required = true) MultipartFile picture1,
+	        @RequestPart(required = true) MultipartFile picture2,
+	        @RequestPart(required = true) MultipartFile picture3,
 	        Authentication auth) throws IOException {
 	    if (picture1 != null && !picture1.isEmpty()) {
 	        carnet.setPicture1(savePicture(picture1));
@@ -75,10 +80,20 @@ public class carnetController {
 	}
 
 	private String savePicture(MultipartFile picture) throws IOException {
-	    String fileName = picture.getOriginalFilename();
-	    String filePath = "C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + fileName;
+		String originalFileName = picture.getOriginalFilename();
+	    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+	    String uniqueFileName = generateUniqueFileName() + fileExtension;
+	    String filePath = environment.getProperty("images.path") + uniqueFileName;
+	    //String filePath2 = uniqueFileName;
 	    Files.copy(picture.getInputStream(), Paths.get(filePath));
-	    return filePath;
+	    return uniqueFileName;
+	}
+	
+	private String generateUniqueFileName() {
+	    LocalDateTime now = LocalDateTime.now();
+	    String timestamp = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(now);
+	    String randomString = UUID.randomUUID().toString().substring(0, 6); // Génère une chaîne aléatoire de 6 caractères
+	    return "picture_" + timestamp + "_" + randomString;
 	}
 	
 /*	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")*/

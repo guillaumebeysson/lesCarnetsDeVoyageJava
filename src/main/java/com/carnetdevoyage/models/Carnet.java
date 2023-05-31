@@ -39,18 +39,14 @@ public class Carnet {
 	@Column(length = 600)
 	private String description;
 	
-	
-	private String picture1;
-	
-	
-	private String picture2;
-	
-	
-	private String picture3;
-	
 	@NotBlank
 	private String country;
 	
+	private String picture1;
+	
+	private String picture2;
+	
+	private String picture3;
 	
 	private int durationTrip;
 	
