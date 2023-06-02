@@ -74,18 +74,6 @@ public class SecurityConfig {
             .httpBasic(Customizer.withDefaults()).build();
     }
 	
-	/*@GetMapping("/example")
-	public ResponseEntity<?> exampleEndpoint(@AuthenticationPrincipal UserDetails userDetails) {
-	    if (userDetails == null) {
-	        // L'utilisateur n'est pas authentifié
-	    	System.out.println("non authentifié");
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	    } else {
-	        // L'utilisateur est authentifié
-	    	System.out.println("authentifié");
-	        return ResponseEntity.ok("Hello, " + userDetails.getUsername() + "!");
-	    }
-	}*/
     
     @Bean
     JwtDecoder jwtDecoder() {
