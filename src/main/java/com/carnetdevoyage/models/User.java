@@ -52,14 +52,19 @@ public class User {
 	@NotBlank
 	private String username;
 	
+	@JsonIgnore
 	@NotBlank
 	@Length(min = 8)
 	String password;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy="author")
+	private Set<Carnet> carnets;
+	
 	private UserRole role;
 	
-	@NonNull
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    List<Role> roles;
+//	@NonNull
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+//    List<Role> roles;
 
 }

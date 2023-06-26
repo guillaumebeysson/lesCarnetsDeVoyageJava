@@ -23,6 +23,5 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Client extends User{
 	
-	private String test;
 
 }

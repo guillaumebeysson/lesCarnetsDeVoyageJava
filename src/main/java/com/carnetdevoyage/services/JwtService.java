@@ -24,12 +24,13 @@ public class JwtService {
     private JwtDecoder jwtDecoder;
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public Map<String, String> generateToken(String username, String roles){
+    public Map<String, String> generateToken(String username, Long id, String roles){
         JwtClaimsSet jwtClaims = JwtClaimsSet.builder()
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(50, ChronoUnit.MINUTES))
                 .issuer("spring-security-oauth")
                 .subject(username)
+                .claim("id", id)
                 .claim("scope", roles)
                 .build();
         var token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaims)).getTokenValue();
@@ -38,8 +39,8 @@ public class JwtService {
         return idToken;
     }
     
-    public Map<String, String> generateTokens(String username, String roles){
-        var idToken = generateToken(username, roles);
+    public Map<String, String> generateTokens(String username, Long id, String roles){
+        var idToken = generateToken(username, id, roles);
         JwtClaimsSet jwtClaims = JwtClaimsSet.builder()
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(60, ChronoUnit.MINUTES))
@@ -54,10 +55,12 @@ public class JwtService {
     public Map<String, String> generateFromRefreshToken(UserDto user) {
         var decodedJwt = jwtDecoder.decode(user.getRefreshToken());
         var nom = decodedJwt.getSubject();
+        var idString = decodedJwt.getClaimAsString("id");
+        var id = Long.parseLong(idString);
         var connected = userDetailsServiceImpl.loadUserByUsername(nom);
         var roles = connected.getAuthorities().stream().map(elt -> elt.getAuthority())
                 .collect(Collectors.joining(" "));
-        return generateTokens(nom, roles);
+        return generateTokens(nom, id, roles);
     }
 
 }

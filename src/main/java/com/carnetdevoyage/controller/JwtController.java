@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.carnetdevoyage.UserDto;
 import com.carnetdevoyage.services.JwtService;
+import com.carnetdevoyage.services.UserDetailsImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +38,9 @@ public class JwtController {
                     .stream()
                     .map(elt -> elt.getAuthority())
                     .collect(Collectors.joining(" "));
+            Long id = ((UserDetailsImpl)authentication.getPrincipal()).getUser().getId();
             log.info("Génération de token pour {}", user.getUsername());
-            return jwtService.generateTokens(authentication.getName(), roles);
+            return jwtService.generateTokens(authentication.getName(), id, roles);
         }else if(user.getGrantType().equals("refreshToken") || user.getGrantType().equals("refresh-token")){
             log.info("Rafraichissement de token pour {}", user.getUsername());
             return jwtService.generateFromRefreshToken(user);

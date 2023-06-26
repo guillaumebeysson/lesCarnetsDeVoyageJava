@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.carnetdevoyage.models.Carnet;
 import com.carnetdevoyage.models.CarnetItem;
 import com.carnetdevoyage.models.Client;
 import com.carnetdevoyage.models.User;
@@ -103,11 +104,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}/carnets")
-    public Collection<CarnetItem> getCarts(@PathVariable long id) {
+    public Collection<Carnet> getCarts(@PathVariable long id) {
         User u = userService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no user with id " + id + " exists"));
         if (u.getRole() == UserRole.ADMIN)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "admins do not have cart, you dummy");
-        return ((Client) u).getCarnetItems();
+        return ((Client) u).getCarnets();
     }
 }

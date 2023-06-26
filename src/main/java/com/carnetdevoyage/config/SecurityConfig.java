@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,8 +69,8 @@ public class SecurityConfig {
                 .logout().disable()
                 .authorizeHttpRequests((auth) -> auth
                     .requestMatchers(HttpMethod.POST, "/token").permitAll()
-                    /*.requestMatchers("/**").authenticated())*/
                     .requestMatchers("/carnets/lastFour").permitAll()
+                    /*.requestMatchers("/**").authenticated())*/
                     .requestMatchers("/**").permitAll())
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
             .httpBasic(Customizer.withDefaults()).build();
@@ -86,6 +88,7 @@ public class SecurityConfig {
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
+    
     
     
 }
