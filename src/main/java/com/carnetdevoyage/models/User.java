@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -57,6 +58,7 @@ public class User {
 	@Length(min = 8)
 	String password;
 	
+	@OrderBy("id DESC")
 	@JsonIgnore
 	@OneToMany(mappedBy="author")
 	private Set<Carnet> carnets;

@@ -106,9 +106,9 @@ public class UserController {
     @GetMapping("/{id}/carnets")
     public Collection<Carnet> getCarts(@PathVariable long id) {
         User u = userService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no user with id " + id + " exists"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "l'utilisateur avec l'id " + id + " n'existe pas"));
         if (u.getRole() == UserRole.ADMIN)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "admins do not have cart, you dummy");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "les admins n'ont pas de carnet");
         return ((Client) u).getCarnets();
     }
 }
