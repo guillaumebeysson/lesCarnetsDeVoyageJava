@@ -34,25 +34,9 @@ public class CarnetService {
 	    return carnetRepository.findAll(sort);
 	}
 	
-//	public Carnet save(Carnet carnet) {
-//		return carnetRepository.save(carnet);
-//	}
 	
-	
-	public Carnet save(Carnet carnet) {
-//		try {
-			
+	public Carnet save(Carnet carnet) {	
 		return	carnetRepository.save(carnet);
-//		} catch (Throwable e) {
-//			try {
-//				if (c.getPicture1().equals(PostType.IMAGE))
-//					Files.deleteIfExists(Paths.get("C:\\Users\\guill\\Pictures\\ImagesPostLesCarnetsDeVoyage" + ((ImagePost) c).getFile()));
-//			} catch (Exception e1) {
-//				e.addSuppressed(e1);
-//				throw e;
-//			}
-//			throw e;
-//		}
 	}
 	
 	public Collection<Carnet> findByCountry(String country) {
@@ -63,13 +47,20 @@ public class CarnetService {
 		return carnetRepository.findById(id)
 		.map(c -> {
 			c.setTitle(carnet.getTitle());
+			c.setCountry(carnet.getCountry());
+			c.setDurationTrip(carnet.getDurationTrip());
+			c.setDeparturePeriod(carnet.getDeparturePeriod());
+			c.setCity(carnet.getCity());
+			c.setOrganisation(carnet.getOrganisation());
+			c.setSituation(carnet.getSituation());
+			c.setIntroduction(carnet.getIntroduction());
+			c.setTransport(carnet.getTransport());
 			c.setIntroduction(carnet.getIntroduction());
 			c.setDescription(carnet.getDescription());
 			c.setPicture1(carnet.getPicture1());
 			c.setPicture2(carnet.getPicture2());
 			c.setPicture3(carnet.getPicture3());
-			c.setCountry(carnet.getCountry());
-			c.setCity(carnet.getCity());
+			c.setDate(carnet.getDate());
 			return carnetRepository.save(c);
 		}).orElseThrow(()-> new RuntimeException("Carnet non trouvé !"));
 	}

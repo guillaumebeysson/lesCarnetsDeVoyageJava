@@ -78,6 +78,32 @@ public class carnetController {
 	    // carnet.setAuthor(((MyUserDetails) auth.getPrincipal()).getUser());
 	    carnetService.save(carnet);
 	}
+	
+	@PutMapping(value = "/updateCarnet", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void update(
+	        @Valid @RequestPart Carnet carnet,
+	        @RequestPart(required = false) MultipartFile picture1,
+	        @RequestPart(required = false) MultipartFile picture2,
+	        @RequestPart(required = false) MultipartFile picture3,
+	        Authentication auth) throws IOException {
+	    if (picture1 != null && !picture1.isEmpty()) {
+	        carnet.setPicture1(savePicture(picture1));
+	    }else {
+	    	carnet.setPicture1(carnet.getPicture1());
+	    }
+	    if (picture2 != null && !picture2.isEmpty()) {
+	        carnet.setPicture2(savePicture(picture2));
+	    }else {
+	    	carnet.setPicture2(carnet.getPicture2());
+	    }
+	    if (picture3 != null && !picture3.isEmpty()) {
+	        carnet.setPicture3(savePicture(picture3));
+	    }else {
+	    	carnet.setPicture3(carnet.getPicture3());
+	    }
+	    // carnet.setAuthor(((MyUserDetails) auth.getPrincipal()).getUser());
+	    carnetService.save(carnet);
+	}
 
 	private String savePicture(MultipartFile picture) throws IOException {
 		String originalFileName = picture.getOriginalFilename();
@@ -189,7 +215,7 @@ public class carnetController {
             predicates.add(cb.equal(root.get("departurePeriod"), departurePeriod));
         }
         if (city != null) {
-            predicates.add(cb.equal(root.get("city"), city));
+            predicates.add(cb.like(root.get("city"), "%" + city + "%"));
         }
 
         // Ajout des prédicats à la clause WHERE de la requête

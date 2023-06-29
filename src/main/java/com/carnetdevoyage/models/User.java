@@ -53,7 +53,6 @@ public class User {
 	@NotBlank
 	private String username;
 	
-	@JsonIgnore
 	@NotBlank
 	@Length(min = 8)
 	String password;
